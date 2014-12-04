@@ -25,3 +25,11 @@ test:
 
 production:
   <<: *default
+
+testing:
+  <<: *default
+  host: localhost
+  port: 5432
+  username: ruby
+  password: blackswan
+  database: openhub_testing

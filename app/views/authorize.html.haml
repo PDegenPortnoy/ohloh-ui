@@ -1,0 +1,18 @@
+.inset
+  %h1 Authorization Confirmation
+  %p
+    Would you like to authorize application
+    %strong="&ldquo;" + @authorization.api_key.name + "&rdquo;"
+    to access your account?
+  %h6.nomargin=link_to_if @authorization.api_key.url, @authorization.api_key.name, @authorization.api_key.url
+  %p=@authorization.api_key.description
+
+.inset
+  -form_tag authorize_url do
+    =hidden_field_tag "oauth_token", @authorization.token
+    -if params[:oauth_callback]
+      =hidden_field_tag "oauth_callback", params[:oauth_callback]
+    %p
+      =check_box_tag 'authorize'
+      Authorize this application to access and modify my Open Hub account.
+    %p=submit_tag 'Save Changes', :class => 'btn btn-primary'

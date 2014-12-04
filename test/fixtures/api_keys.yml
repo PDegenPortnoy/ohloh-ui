@@ -1,0 +1,11 @@
+first:
+  id: 1
+  account_id: 1
+  key: abc
+  secret: 123
+  name: "Test Application"
+  description: "This application is used for testing the API."
+  daily_count: 0
+  daily_limit: 100
+  total_count: 0
+  status: <%= ApiKey::STATUS_OK %>
