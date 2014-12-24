@@ -1,6 +1,6 @@
 class Account::ProjectCore < OhDelegator::Base
   parent_scope do
-    has_many :projects, -> { where { deleted.eq(false) } }, through: :manages, source: :target, source_type: 'Project'
+    has_many :projects, -> { where(deleted: false) }, through: :manages, source: :target, source_type: 'Project'
   end
 
   # TODO: Replace stacked_project? with this

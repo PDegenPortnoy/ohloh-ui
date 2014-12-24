@@ -20,6 +20,8 @@ gem 'aws-sdk'
 gem 'squeel'
 gem 'oh_delegator', git: 'git@github.com:blackducksw/oh_delegator.git'
 
+gem 'pry-rails', group: :development
+
 group :development, :test, :vagrant do
   gem 'byebug'
   gem 'factory_girl_rails'
