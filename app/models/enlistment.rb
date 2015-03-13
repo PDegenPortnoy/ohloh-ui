@@ -4,10 +4,17 @@ class Enlistment < ActiveRecord::Base
 
   acts_as_editable editable_attributes: [:ignore]
   acts_as_protected parent: :project
-  scope :sort_by_url, ->{ order('projects.name, repositories.url, repositories.module_name').sort}
-  scope :sort_by_project, ->{order('projects.name, repositories.url, repositories.module_name').sort }
-  scope :sort_by_type, ->{order('repositories.type, repositories.url, repositories.module_name').sort }
-  scope :sort_by_module_name, ->{order('repositories.module_name, repositories.url').sort }
+  scope :sort_by_url, ->{ order('projects.name, repositories.url, repositories.module_name')}
+  scope :sort_by_project, ->{order('projects.name, repositories.url, repositories.module_name') }
+  scope :sort_by_type, ->{order('repositories.type, repositories.url, repositories.module_name') }
+  scope :sort_by_module_name, ->{order('repositories.module_name, repositories.url') }
+  scope :filter_by, lambda { |query|
+    includes(:project, :repository)
+      .references(:all)
+      .where('projects.name ilike :query or repositories.url ilike :query or' \
+            ' repositories.module_name ilike :query or repositories.type ilike :query' \
+            ' or repositories.branch_name ilike :query', query: "%#{query}%") if query
+  }
 
   class << self
     def enlist_project_in_repository(editor_account, project, repository, ignore = nil)
