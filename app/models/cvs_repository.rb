@@ -1,0 +1,3 @@
+class CvsRepository < Repository
+
+end

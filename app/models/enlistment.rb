@@ -1,13 +1,14 @@
 class Enlistment < ActiveRecord::Base
   belongs_to :repository
   belongs_to :project
-
   acts_as_editable editable_attributes: [:ignore]
   acts_as_protected parent: :project
   scope :sort_by_url, ->{ order('projects.name, repositories.url, repositories.module_name')}
   scope :sort_by_project, ->{order('projects.name, repositories.url, repositories.module_name') }
   scope :sort_by_type, ->{order('repositories.type, repositories.url, repositories.module_name') }
-  scope :sort_by_module_name, ->{order('repositories.module_name, repositories.url') }
+  scope :sort_by_module_name, ->{ order('repositories.module_name, repository_ides.url') }
+
+  scope :with_url_like, ->(like){ (like.nil? || like.empty?) ? TRUE : where('lower(repositories.url) LIKE :query', query: "%#{ like.downcase }%") }
   scope :filter_by, lambda { |query|
     includes(:project, :repository)
       .references(:all)
@@ -31,19 +32,30 @@ class Enlistment < ActiveRecord::Base
 
   delegate 'failed?', :to => :repository
 
-=begin  
-  def explain_yourself(edit) # not required as i didn't find act_as editable with explaination
+  # TODO: Ensure forge and job 
+  # with_scope for with_url_like
+  # end
+
+  def revive_or_create
+    deleted_enlistment = Enlistment.find_by(ignore: ignore)
+    return save unless deleted_enlistment
+    CreateEdit.where(target: deleted_enlistment).first.redo!(editor_account)
+    deleted_enlistment.editor_account = editor_account
+    deleted_enlistment.update_attributes(ignore: ignore)
   end
 
-  def ensure_forge_and_job # i ahven't seen any after_save calbacks here 
+  def ignore_examples
+    examples = []
+    if repository.best_code_set
+      examples = repository.best_code_set.fyles.find(:all, :limit => 3).map(&:name).sort
+    end
+    examples
   end
 
-  def self.with_url_like(like) # not used anywhere
+  def analysis_sloc_set
+    return nil unless project.best_analysis
+    analysis_sloc_sets = project.best_analysis.analysis_sloc_sets
+    analysis_sloc_sets.joins("INNER JOIN sloc_sets ON analysis_sloc_sets.sloc_set_id = sloc_sets.id INNER JOIN repositories ON repositories.best_code_set_id = sloc_sets.code_set_id AND repositories.id = #{repository_id}").limit(1)
   end
-
-  def analysis_sloc_set #CodeSet model not found
-  end
-  def ignore_examples not used anywhere
-  end
-=end  
+ 
 end

@@ -5,6 +5,8 @@ class Analysis < ActiveRecord::Base
   has_one :previous_twelve_month_summary
   has_many :analysis_summaries
   has_many :analysis_aliases
+  has_many :analysis_sloc_sets, :dependent => :delete_all
+  has_many :sloc_sets, :through => :analysis_sloc_sets
   belongs_to :main_language, class_name: 'Language', foreign_key: :main_language_id
 
   scope :fresh, -> { where(Analysis.arel_table[:created_at].gt(Time.now - 2.days)) }
