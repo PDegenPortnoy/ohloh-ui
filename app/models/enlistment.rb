@@ -8,7 +8,7 @@ class Enlistment < ActiveRecord::Base
   scope :sort_by_type, ->{order('repositories.type, repositories.url, repositories.module_name') }
   scope :sort_by_module_name, ->{ order('repositories.module_name, repository_ides.url') }
 
-  scope :with_url_like, ->(like){ (like.nil? || like.empty?) ? TRUE : where('lower(repositories.url) LIKE :query', query: "%#{ like.downcase }%") }
+  scope :with_url_like, ->(like){ (like.nil? || like.empty?) ? where('TRUE') : where('lower(repositories.url) LIKE :query', query: "%#{ like.downcase }%") }
   scope :filter_by, lambda { |query|
     includes(:project, :repository)
       .references(:all)
@@ -33,11 +33,10 @@ class Enlistment < ActiveRecord::Base
   delegate 'failed?', :to => :repository
 
   # TODO: Ensure forge and job 
-  # with_scope for with_url_like
   # end
 
   def revive_or_create
-    deleted_enlistment = Enlistment.find_by(ignore: ignore)
+    deleted_enlistment = Enlistment.find_by(project_id: project_id, deleted: true)
     return save unless deleted_enlistment
     CreateEdit.where(target: deleted_enlistment).first.redo!(editor_account)
     deleted_enlistment.editor_account = editor_account
@@ -47,7 +46,7 @@ class Enlistment < ActiveRecord::Base
   def ignore_examples
     examples = []
     if repository.best_code_set
-      examples = repository.best_code_set.fyles.find(:all, :limit => 3).map(&:name).sort
+      examples = repository.best_code_set.fyles.first(3).map(&:name).sort
     end
     examples
   end
