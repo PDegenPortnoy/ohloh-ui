@@ -3,12 +3,10 @@ class Enlistment < ActiveRecord::Base
   belongs_to :project
   acts_as_editable editable_attributes: [:ignore]
   acts_as_protected parent: :project
-  scope :sort_by_url, ->{ order('projects.name, repositories.url, repositories.module_name')}
-  scope :sort_by_project, ->{order('projects.name, repositories.url, repositories.module_name') }
-  scope :sort_by_type, ->{order('repositories.type, repositories.url, repositories.module_name') }
-  scope :sort_by_module_name, ->{ order('repositories.module_name, repository_ides.url') }
-
-  scope :with_url_like, ->(like){ (like.nil? || like.empty?) ? where('TRUE') : where('lower(repositories.url) LIKE :query', query: "%#{ like.downcase }%") }
+  scope :sort_by_url, -> { order('projects.name, repositories.url, repositories.module_name') }
+  scope :sort_by_project, -> { order('projects.name, repositories.url, repositories.module_name') }
+  scope :sort_by_type, -> { order('repositories.type, repositories.url, repositories.module_name') }
+  scope :sort_by_module_name, -> { order('repositories.module_name, repository_ides.url') }
   scope :filter_by, lambda { |query|
     includes(:project, :repository)
       .references(:all)
@@ -28,11 +26,19 @@ class Enlistment < ActiveRecord::Base
       end
       enlistment.reload
     end
+
+    def with_url_like(query)
+      if query.nil? || query.empty?
+        where('TRUE')
+      else
+        where('lower(repositories.url) LIKE :query', query: "%#{ query.downcase }%")
+      end
+    end
   end
 
-  delegate 'failed?', :to => :repository
+  delegate 'failed?', to: :repository
 
-  # TODO: Ensure forge and job 
+  # TODO: Ensure forge and job
   # end
 
   def revive_or_create
@@ -56,5 +62,4 @@ class Enlistment < ActiveRecord::Base
     analysis_sloc_sets = project.best_analysis.analysis_sloc_sets
     analysis_sloc_sets.joins("INNER JOIN sloc_sets ON analysis_sloc_sets.sloc_set_id = sloc_sets.id INNER JOIN repositories ON repositories.best_code_set_id = sloc_sets.code_set_id AND repositories.id = #{repository_id}").limit(1)
   end
- 
 end
