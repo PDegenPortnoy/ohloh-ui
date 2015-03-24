@@ -22,12 +22,25 @@ class EnlistmentTest < ActiveSupport::TestCase
     r1.id.must_equal r2.id
   end
 
+  it 'should return all enlistments with nil ' do
+    query = ''
+    count = Enlistment.all.count
+    enlistment = Enlistment.with_url_like(query)
+    enlistment.count.must_equal count
+  end
+
+  it 'should return queried enlistments' do
+    query = 'Google'
+    enlistment = Enlistment.includes(:repository).references(:all).with_url_like(query)
+    enlistment.count.must_equal 0
+  end
+
   it 'must revive or create deleted enlistments' do
     enlistment = create(:enlistment, project: projects(:linux))
     enlistment.destroy
-    ignore = "ignore"
-    new_enlistment = build(:enlistment, ignore: ignore, project_id: enlistment.project_id )
-    new_enlistment.editor_account = create(:account) 
+    ignore = 'ignore'
+    new_enlistment = build(:enlistment, ignore: ignore, project_id: enlistment.project_id)
+    new_enlistment.editor_account = create(:account)
     assert_no_difference('Enlistment.count') do
       new_enlistment.revive_or_create
     end
@@ -44,16 +57,15 @@ class EnlistmentTest < ActiveSupport::TestCase
   end
   it 'should return files from ignore_examples' do
     enlistment = create(:enlistment_with_code_set)
-    enlistment.ignore_examples.must_equal ["test.c"]
+    enlistment.ignore_examples.must_equal ['test.c']
   end
 
   it 'should return files from ignore_examples' do
     enlistment = create(:enlistment_with_code_set)
-    enlistment.ignore_examples.must_equal ["test.c"]
+    enlistment.ignore_examples.must_equal ['test.c']
   end
   it 'should return sloc_sets' do
     enlistment = create(:enlistment)
     enlistment.analysis_sloc_set.must_equal []
   end
-
 end
