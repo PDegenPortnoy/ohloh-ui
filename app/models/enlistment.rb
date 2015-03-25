@@ -8,7 +8,7 @@ class Enlistment < ActiveRecord::Base
   after_save :ensure_forge_and_job
   # after_save { |e| e.project.save }
 
-  validates :ignore, lenghth: 1000, allow_nil: true
+  validates :ignore, length: { maximum: 500 }, allow_nil: true
 
   delegate 'failed?', to: :repository
 # TODO: 
