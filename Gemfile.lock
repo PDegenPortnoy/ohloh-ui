@@ -68,15 +68,11 @@ GEM
     ast (2.0.0)
     astrolabe (1.3.0)
       parser (>= 2.2.0.pre.3, < 3.0)
-    aws-sdk (2.0.26)
-      aws-sdk-resources (= 2.0.26)
-    aws-sdk-core (2.0.26)
-      builder (~> 3.0)
-      jmespath (~> 1.0)
-      multi_json (~> 1.0)
-      multi_xml (~> 0.5)
-    aws-sdk-resources (2.0.26)
-      aws-sdk-core (= 2.0.26)
+    aws-sdk (1.64.0)
+      aws-sdk-v1 (= 1.64.0)
+    aws-sdk-v1 (1.64.0)
+      json (~> 1.4)
+      nokogiri (>= 1.4.4)
     bourbon (4.2.0)
       sass (~> 3.4)
       thor
@@ -179,8 +175,6 @@ GEM
     jbuilder (2.2.7)
       activesupport (>= 3.0.0, < 5)
       multi_json (~> 1.2)
-    jmespath (1.0.2)
-      multi_json (~> 1.0)
     jquery-rails (4.0.3)
       rails-dom-testing (~> 1.0)
       railties (>= 4.2.0)
@@ -211,8 +205,7 @@ GEM
       railties (~> 4.1)
     mocha (1.1.0)
       metaclass (~> 0.0.1)
-    multi_json (1.10.1)
-    multi_xml (0.5.5)
+    multi_json (1.11.0)
     net-scp (1.2.1)
       net-ssh (>= 2.6.5)
     net-ssh (2.9.2)
@@ -355,7 +348,7 @@ PLATFORMS
 
 DEPENDENCIES
   activeadmin!
-  aws-sdk
+  aws-sdk (< 2.0)
   brakeman
   byebug
   capistrano-passenger

@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 source 'http://oh-stage-utility-1.blackducksoftware.com:9292/'
 
 gem 'activeadmin', github: 'activeadmin'
-gem 'aws-sdk'
+gem 'aws-sdk', '< 2.0'
 gem 'brakeman'
 gem 'coffee-rails'
 gem 'coffee-script-source', '~>1.8.0'
