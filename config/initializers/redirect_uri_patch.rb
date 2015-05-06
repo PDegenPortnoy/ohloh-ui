@@ -1,0 +1,1 @@
+RedirectUriValidator.include(RedirectUriValidatorPatch)
