@@ -1,6 +1,7 @@
 class StacksController < ApplicationController
   helper MapHelper
   helper RatingsHelper
+  helper :widgets
 
   before_action :session_required, except: [:index, :show, :similar, :near]
   before_action :find_stack, except: [:index, :create, :near]

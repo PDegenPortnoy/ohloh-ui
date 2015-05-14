@@ -1,4 +1,11 @@
 class Stack < ActiveRecord::Base
+  SAMPLE_STACKS = { 'lamp' => { projects: [3141, 72, 4139, 28], name: 'LAMP',
+                                description: 'Linux Kernel, Apache HTTP Server, MySQL, and PHP' },
+                    'sash' => { projects: [41, 3468, 3568, 55], name: 'SASH',
+                                description: 'Spring Framework, Axis, Struts, and Hibernate' },
+                    'gnome' => { projects: [3760, 43, 9, 29, 36], name: 'GNOME Desktop',
+                                 description: 'GNOME, Firefox, OpenOffice.org, Thunderbird, and GIMP' } }
+
   belongs_to :account
   belongs_to :project
 
@@ -16,7 +23,23 @@ class Stack < ActiveRecord::Base
 
   before_validation :sanitize_description
 
-  def sandox?
+  def reset
+    if sandbox?
+      Stack.delete(id)
+    else
+      stack_entries.destroy_all
+      stack_ignores.destroy_all
+    end
+  end
+
+  def reinitialize(sample_id)
+    project_ids = SAMPLE_STACKS[sample_id].try([], :projects)
+    return if sample_id && project_ids.blank?
+    already_stacked_ids = stack_entries.where(project_id: project_ids, deleted_at: nil).pluck(:project_id)
+    projects << Project.where(id: (project_ids - already_stacked_ids))
+  end
+
+  def sandbox?
     account_id.nil? && project_id.nil? && !session_id.nil?
   end
 

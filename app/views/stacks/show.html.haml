@@ -8,22 +8,22 @@
 
 .row{ id: "stack_#{@stack.id}" }
   .col-md-9
-    %h1{ style: 'float: left;' }
+    %h1.pull-left
       %span{ class: editable ? 'rest_in_place' : '', attribute: 'title', col: 20, max_length: 20, rows: 1 }
         = @stack.title
-      - stack_edit_in_place if editable
-    - if editable
+      - stack_edit_in_place if editable && !@stack.sandbox?
+    - if editable && !@stack.sandbox?
       %a.btn.btn-mini.btn-danger.stack_remove{ href: stack_path(@stack), method: :delete, confirm: t('.delete_confirm'),
                                                style: 'float: right; display:block; margin-top:10px;' }
         %i.icon-trash= t '.remove'
-.clear
-.row{ id: "stack_#{@stack.id}" }
+    .clearfix
+.row
   .col-md-9
     %p.description.nomargin
       %span{ class: editable ? 'rest_in_place' : '', attribute: 'description', col: 35, max_length: 120, rows: 3 }
         = @stack.description
-      - stack_edit_in_place if editable
-    - if editable
+      - stack_edit_in_place unless @stack.sandbox?
+    - if editable || @stack.sandbox?
       - show_them = @stack.project_count == 0
       .padding_one_top
         .recommendations
@@ -38,7 +38,7 @@
           .list
             %ul.stack_sm_suggestions
               - if show_them
-                = # TODO: stack builder = render partial: 'stack_builder/small_suggestion'...
+                = render partial: 'small_suggestion', collection: @stack.suggest_projects(5)
           .controls{ style: "#{'display:none' unless show_them}" }
             %a.btn.btn-mini.command#skip_all= t('.skip_all')
             %a.command.btn.btn-mini#more{ style: 'display:none' }= t('.show_me_more')
@@ -52,8 +52,16 @@
     .stack_item_list
       %table.table.table-bordered.stack_list{ id: "stack_list_#{@stack.id}" }
         = render partial: 'stack_entry', collection: stack_entries, locals: { editable: editable }
-      - if stack_entries.blank?
-        %p= t('.empty_stack_msg')
+      - if stack_entries.blank? && params[:query].blank?
+        #empty_stack_text
+        - if params[:id] == 'sandbox' || editable
+          %p= t('.add_projects')
+          %ul
+            - SAMPLE_STACKS.each do |id, stack|
+              %li= link_to stack[:name], reset_stack_builder_path(@stack.id, init: id), method: :post, title: stack[:description]
+        - else
+          %p= t('.empty_stack_msg')
+
   .col-md-3
     .well
       .inset.stack_definition
@@ -78,6 +86,6 @@
             .users.clear
               - similar_stacks.each do |s|
                 = avatar_for s[:stack].account, size: 34, url: stack_path(s[:stack]), title: s[:stack].account.name
-            %a{ href: similar_stack_path(@stack), style: 'float: right;' }= t('.more')
+            %a.pull-right{ href: similar_stack_path(@stack) }= t('.more')
       %hr.one
-      = # TODO: widgets = stack_promo
+      = render partial: 'stack_widgets/promo', locals: { widget: StackWidget.new(stack_id: @stack.id), stack: @stack, width: 98 }

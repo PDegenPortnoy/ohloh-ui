@@ -296,6 +296,11 @@ Rails.application.routes.draw do
         get :normal
       end
     end
+    resource :builder, controller: :stack_builder, only: [:show] do
+      member do
+        post :reset
+      end
+    end
   end
 
   resources :languages, only: [:show, :index] do

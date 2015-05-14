@@ -1,7 +1,7 @@
 - unless defined?(HIDE_BADGE) && HIDE_BADGE == true
   %hr.one
-  %a.promo{ href: href }
+  %a.promo{ href: stack_widgets_path(widget.stack) }
     .inset
       %h6= t('.embed')
       %p.soft= t('.show')
-      .widget_preview= render partial: 'stack_widgets/normal_inner', locals: widget_params.merge(ref: 'sample')
+      .widget_preview= render partial: 'stack_widgets/normal_inner', locals: { widget: widget , stack: stack, width: width }

@@ -16,6 +16,7 @@ en:
     create:
       error: "Stack failed to be saved!"
     show:
+      add_projects: 'Add projects to your stack using Recommendations or Add Project, above. You may also choose one of these common stacks to get started:'
       page_title: "%{who}'s %{what} Stack"
       empty_stack_msg: "This stack is empty."
       remove: "Remove"
