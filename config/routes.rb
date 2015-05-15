@@ -283,7 +283,6 @@ Rails.application.routes.draw do
   resources :stacks, only: [:show, :create, :update, :destroy] do
     member do
       get :similar
-      get :builder
     end
     resources :stack_entries, only: [:create, :destroy]
     resources :stack_ignores, only: [:create] do
@@ -299,6 +298,7 @@ Rails.application.routes.draw do
     resource :builder, controller: :stack_builder, only: [:show] do
       member do
         post :reset
+        get :recommendations
       end
     end
   end

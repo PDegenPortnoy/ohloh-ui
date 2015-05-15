@@ -4,15 +4,15 @@ class StackBuilderController < ApplicationController
   before_action :stack_authorized, except: :show
   before_action :create_stack_ignores, only: [:show, :recommendations]
 
-  helper :projects,
+  helper :projects
 
   def show
     redirect_to stack_path(@stack.id)
   end
 
   def recommendations
-    recommendations = render_to_string partial: '/stacks/small_suggestion', collection: @stack.suggest_projects(5)
-    render json: { recommendations: recommendations }
+    suggestions = render_to_string partial: 'stacks/small_suggestion.html.haml', collection: @stack.suggest_projects(5)
+    render json: { recommendations: suggestions }
   end
 
   def reset

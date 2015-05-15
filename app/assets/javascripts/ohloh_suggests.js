@@ -281,7 +281,7 @@ StackShow = {
       skip_projects = ""
     }
     $.getJSON(
-      '/stacks/'+StackShow.stack_id()+'/builder.json',
+      '/stacks/'+StackShow.stack_id()+'/builder/recommendations.json',
       {ignore:String(skip_projects)},
       function(result) {
         var list = $(".recommendations .list");
@@ -315,7 +315,7 @@ StackShow = {
 
   show_recommendations_panel: function() {
     $("a#show").before("<div class='busy' style='width:16px;float:right;'>&nbsp;</span>");
-    $.getJSON('/stacks/'+StackShow.stack_id()+'/builder.json', function(response) {
+    $.getJSON('/stacks/'+StackShow.stack_id()+'/builder/recommendations.json', function(response) {
       var show_div = $("a#show").parent().parent();
       $("a#show").siblings('.busy').remove();
       $(".recomendations").css('height', $("recommendations").height);
