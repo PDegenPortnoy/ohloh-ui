@@ -1,10 +1,8 @@
 class Account::ClaimCore < OhDelegator::Base
-  # FIXME: Replace claimed_email_ids with this.
   def email_ids
     email_ids_query.pluck(:email_address_ids).flatten.uniq
   end
 
-  # FIXME: Replace claimed_emails with this.
   def emails
     return [] if email_ids.empty?
     EmailAddress.where(id: email_ids).pluck(:address)
