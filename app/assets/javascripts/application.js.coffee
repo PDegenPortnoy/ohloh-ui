@@ -24,6 +24,7 @@
 #= require highcharts/solid-gauge
 #= require tagcloud
 #= require ace-element.min
+#= require api/timeline-api.js
 
 $(document).on 'page:change', ->
   Edit.init()
