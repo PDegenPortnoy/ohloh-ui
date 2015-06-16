@@ -25,6 +25,25 @@
 #= require tagcloud
 #= require ace-element.min
 #= require api/timeline-api.js
+#= require api/scripts/timeline.js
+#= require api/scripts/util/platform.js
+#= require api/scripts/util/debug.js
+#= require api/scripts/util/xmlhttp.js
+#= require api/scripts/util/dom.js
+#= require api/scripts/util/graphics.js
+#= require api/scripts/util/date-time.js
+#= require api/scripts/util/data-structure.js
+#= require api/scripts/units.js
+#= require api/scripts/themes.js
+#= require api/scripts/ethers.js
+#= require api/scripts/ether-painters.js
+#= require api/scripts/labellers.js
+#= require api/scripts/sources.js
+#= require api/scripts/layouts.js
+#= require api/scripts/painters.js
+#= require api/scripts/decorators.js
+#= require api/scripts/l10n/en/labellers.js
+#= require api/scripts/l10n/en/timeline.js
 
 $(document).on 'page:change', ->
   Edit.init()

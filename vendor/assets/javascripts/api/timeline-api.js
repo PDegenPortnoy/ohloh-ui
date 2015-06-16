@@ -25,7 +25,6 @@ Timeline.urlPrefix = '/assets/api/';
 (function() {
     var javascriptFiles = [
         "timeline.js",
-
         "util/platform.js",
         "util/debug.js",
         "util/xmlhttp.js",
