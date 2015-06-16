@@ -21,7 +21,7 @@ Timeline.Platform = new Object();
         before it loads timeline.js and util/platform.js.
     */
 
-Timeline.urlPrefix = '/assets/api';
+Timeline.urlPrefix = '/assets/api/';
 (function() {
     var javascriptFiles = [
         "timeline.js",
@@ -163,7 +163,7 @@ Timeline.urlPrefix = '/assets/api';
          *  Include non-localized files
          */
         includeJavascriptFiles(Timeline.urlPrefix + "scripts/", javascriptFiles);
-        includeCssFiles(Timeline.urlPrefix + "styles/", cssFiles);
+        //includeCssFiles(Timeline.urlPrefix + "styles/", cssFiles);
 
         /*
          *  Include localized files

@@ -16,14 +16,6 @@
 #= require underscore-min
 #= require chosen.min
 #= require app
-#= require_tree .
-#= require twitter/bootstrap
-#= require d3.min
-#= require highcharts/highstock
-#= require highcharts/highcharts-more
-#= require highcharts/solid-gauge
-#= require tagcloud
-#= require ace-element.min
 #= require api/timeline-api.js
 #= require api/scripts/timeline.js
 #= require api/scripts/util/platform.js
@@ -44,6 +36,16 @@
 #= require api/scripts/decorators.js
 #= require api/scripts/l10n/en/labellers.js
 #= require api/scripts/l10n/en/timeline.js
+
+#= require_tree .
+#= require twitter/bootstrap
+#= require d3.min
+#= require highcharts/highstock
+#= require highcharts/highcharts-more
+#= require highcharts/solid-gauge
+#= require tagcloud
+#= require ace-element.min
+
 
 $(document).on 'page:change', ->
   Edit.init()
