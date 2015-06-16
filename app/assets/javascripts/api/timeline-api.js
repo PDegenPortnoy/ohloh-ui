@@ -24,34 +24,34 @@ Timeline.Platform = new Object();
 Timeline.urlPrefix = '/assets/api/';
 (function() {
     var javascriptFiles = [
-        "timeline.js",
-        "util/platform.js",
-        "util/debug.js",
-        "util/xmlhttp.js",
-        "util/dom.js",
-        "util/graphics.js",
-        "util/date-time.js",
-        "util/data-structure.js",
+        // "timeline.js",
+        // "util/platform.js",
+        // "util/debug.js",
+        // "util/xmlhttp.js",
+        // "util/dom.js",
+        // "util/graphics.js",
+        // "util/date-time.js",
+        // "util/data-structure.js",
 
-        "units.js",
-        "themes.js",
-        "ethers.js",
-        "ether-painters.js",
-        "labellers.js",
-        "sources.js",
-        "layouts.js",
-        "painters.js",
-        "decorators.js"
+        // "units.js",
+        // "themes.js",
+        // "ethers.js",
+        // "ether-painters.js",
+        // "labellers.js",
+        // "sources.js",
+        // "layouts.js",
+        // "painters.js",
+        // "decorators.js"
     ];
     var cssFiles = [
-        "timeline.css",
-        "ethers.css",
-        "events.css"
+        // "timeline.css",
+        // "ethers.css",
+        // "events.css"
     ];
 
     var localizedJavascriptFiles = [
-        "timeline.js",
-        "labellers.js"
+        // "timeline.js",
+        // "labellers.js"
     ];
     var localizedCssFiles = [
     ];
