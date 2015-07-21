@@ -26,10 +26,15 @@ class PeopleController < UnclaimedController
 
   def preload_data
     preload_emails_from_unclaimed_people
-    @cbp_map = PeopleDecorator.new(@claimed_people).commits_by_project_map
-    @positions_map = Position.where(id: @cbp_map.values.map(&:first).flatten)
+    @cbp_map =  Rails.cache.fetch('people_index_cbp_map', expires_in: 4.hours) do
+      PeopleDecorator.new(@claimed_people).commits_by_project_map
+    end
+
+    @positions_map = Rails.cache.fetch('people_index_positions_map', expires_in: 4.hours) do
+      Position.where(id: @cbp_map.values.map(&:first).flatten)
                      .preload(project: [{ best_analysis: :main_language }, :logo])
                      .index_by(&:id)
+    end
   end
 
   def find_rankings_people
