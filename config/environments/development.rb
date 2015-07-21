@@ -48,4 +48,6 @@ Rails.application.configure do
   }
   Paperclip::Attachment.default_options[:path] = '/attachments/:id/:basename:style.:extension'
   Paperclip::Attachment.default_options[:use_timestamp] = false
+
+  config.action_controller.perform_caching = true
 end
