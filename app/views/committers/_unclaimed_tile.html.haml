@@ -7,7 +7,7 @@
 
 .logo
   %a{ href: project_path(project), title: project.name }
-    - project_icon(project, :small, class: 'logo')
+    = project.decorate.icon(:small, { class: 'logo' } )
 .commits{ style: "background-color: ##{bg_color}; color: ##{txt_color} !important", title: "#{emails.join("\n")}" }
   %span= name_fact.commits
   .clearfix

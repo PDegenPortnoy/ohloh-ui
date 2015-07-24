@@ -89,7 +89,7 @@ module ApplicationHelper
 
   def project_link(project, size = :small, opts = {})
     opts = opts.merge(href: "/p/#{project.to_param}")
-    inner = capture_haml { project_icon(project, size, opts) }
+    inner = project.decorate.icon(size, opts)
     haml_tag :a, inner, opts
   end
 

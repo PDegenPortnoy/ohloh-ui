@@ -11,7 +11,7 @@
 
   .pull-left#inner_content
     %a.pull-left.logo{ href: project_path(project), style: 'max-width: 64px;' }
-      - project_icon(project, :med)
+      = project.decorate.icon(:med, { class: 'logo' })
 
     .info.pull-left
       %p

@@ -2,7 +2,7 @@
 
 %tr.stack_entry{ id: "stack_entry_#{stack_entry.id}", style: "#{'display:none;' if hidden }" }
   %td{ width: '13%', valign: 'middle' }
-    - project_icon(stack_entry.project, :small)
+    = stack_entry.project.decorate.icon
   %td{ width: '70%', valign: 'top' }
     = link_to stack_entry.project.name, project_url(stack_entry.project)
     .line_two
