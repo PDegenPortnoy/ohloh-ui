@@ -12,7 +12,7 @@ en:
     claim:
       meta_name: 'ROBOTS'
       meta_content: 'NOINDEX, NOFOLLOW'
-      title: "%{current_user}Claim Contributions - Open Hub"
+      title: "%{current_user} Claim Contributions - Open Hub"
       people: 'People'
       heading: 'Claim Contributions'
       unclaimed_committer_ids: "Unclaimed Committer ID's"
@@ -20,7 +20,7 @@ en:
       nothing_to_claim: 'Nothing to claim'
       save_claim: 'Save Claim'
     index:
-      title: "%{name}Unclaimed Committer ID's - Open Hub"
+      title: "%{name} Unclaimed Committer ID's - Open Hub"
       people: 'People'
       heading: "Unclaimed Committer ID's"
       see_all_committers: "See All Unclaimed Committer ID's"
