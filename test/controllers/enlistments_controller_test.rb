@@ -171,6 +171,19 @@ describe 'EnlistmentsControllerTest' do
       flash[:notice].must_equal I18n.t('enlistments.create.notice', url: repository.url)
     end
 
+    it 'wont allow other branches of a repository in the same project' do
+      Repository.any_instance.stubs(:bypass_url_validation)
+      GitRepository.new.source_scm_class.any_instance.stubs(:validate_server_connection)
+      enlistment = create(:enlistment)
+
+      assert_no_difference ['Repository.count', 'Enlistment.count'] do
+        post :create, project_id: enlistment.project_id,
+                      repository: enlistment.repository.attributes.merge(branch_name: Faker::Name.name)
+      end
+
+      flash[:notice].must_match /A repository with the url: .+ already exists for this project./
+    end
+
     it 'must handle duplicate urls with leading or trailing spaces' do
       Repository.any_instance.stubs(:bypass_url_validation)
       GitRepository.new.source_scm_class.any_instance.stubs(:validate_server_connection)
