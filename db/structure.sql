@@ -1044,13 +1044,30 @@ CREATE SEQUENCE code_sets_id_seq
 
 CREATE TABLE code_sets (
     id integer DEFAULT nextval('code_sets_id_seq'::regclass) NOT NULL,
-    repository_id integer NOT NULL,
     updated_on timestamp without time zone,
     best_sloc_set_id integer,
     as_of integer,
     logged_at timestamp without time zone,
     clump_count integer DEFAULT 0,
-    fetched_at timestamp without time zone
+    fetched_at timestamp without time zone,
+    repository_id integer,
+    code_location_id integer
+);
+
+
+--
+-- Name: code_sets_bk; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE code_sets_bk (
+    id integer,
+    updated_on timestamp without time zone,
+    best_sloc_set_id integer,
+    as_of integer,
+    logged_at timestamp without time zone,
+    clump_count integer,
+    fetched_at timestamp without time zone,
+    repository_id integer
 );
 
 
@@ -1400,11 +1417,27 @@ CREATE SEQUENCE enlistments_id_seq
 CREATE TABLE enlistments (
     id integer DEFAULT nextval('enlistments_id_seq'::regclass) NOT NULL,
     project_id integer NOT NULL,
-    repository_id integer NOT NULL,
     deleted boolean DEFAULT false NOT NULL,
     created_at timestamp without time zone DEFAULT timezone('UTC'::text, now()) NOT NULL,
     updated_at timestamp without time zone DEFAULT timezone('UTC'::text, now()) NOT NULL,
-    ignore text
+    ignore text,
+    repository_id integer,
+    code_location_id integer
+);
+
+
+--
+-- Name: enlistments_bk; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE enlistments_bk (
+    id integer,
+    project_id integer,
+    deleted boolean,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone,
+    ignore text,
+    repository_id integer
 );
 
 
@@ -1977,7 +2010,6 @@ CREATE SEQUENCE jobs_id_seq
 CREATE TABLE jobs (
     id integer DEFAULT nextval('jobs_id_seq'::regclass) NOT NULL,
     project_id integer,
-    repository_id integer,
     status integer DEFAULT 0 NOT NULL,
     type text NOT NULL,
     priority integer DEFAULT 0 NOT NULL,
@@ -1997,7 +2029,40 @@ CREATE TABLE jobs (
     retry_count integer DEFAULT 0,
     do_not_retry boolean DEFAULT false,
     failure_group_id integer,
-    organization_id integer
+    organization_id integer,
+    repository_id integer,
+    code_location_id integer
+);
+
+
+--
+-- Name: jobs_bk; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE jobs_bk (
+    id integer,
+    project_id integer,
+    status integer,
+    type text,
+    priority integer,
+    current_step integer,
+    current_step_at timestamp without time zone,
+    max_steps integer,
+    exception text,
+    backtrace text,
+    code_set_id integer,
+    sloc_set_id integer,
+    notes text,
+    wait_until timestamp without time zone,
+    account_id integer,
+    logged_at timestamp without time zone,
+    slave_id integer,
+    started_at timestamp without time zone,
+    retry_count integer,
+    do_not_retry boolean,
+    failure_group_id integer,
+    organization_id integer,
+    repository_id integer
 );
 
 
@@ -3281,6 +3346,38 @@ ALTER SEQUENCE project_reports_id_seq OWNED BY project_reports.id;
 
 
 --
+-- Name: project_security_sets; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE project_security_sets (
+    id integer NOT NULL,
+    project_id character varying NOT NULL,
+    uuid character varying NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: project_security_sets_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE project_security_sets_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: project_security_sets_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE project_security_sets_id_seq OWNED BY project_security_sets.id;
+
+
+--
 -- Name: project_vulnerability_reports; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -3452,6 +3549,70 @@ ALTER SEQUENCE recommendations_id_seq OWNED BY recommendations.id;
 
 
 --
+-- Name: releases; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE releases (
+    id integer NOT NULL,
+    release_id character varying NOT NULL,
+    released_on timestamp without time zone,
+    version_name character varying,
+    project_security_set_id integer,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: releases_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE releases_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: releases_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE releases_id_seq OWNED BY releases.id;
+
+
+--
+-- Name: releases_vulnerabilities; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE releases_vulnerabilities (
+    id integer NOT NULL,
+    release_id integer,
+    vulnerability_id integer
+);
+
+
+--
+-- Name: releases_vulnerabilities_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE releases_vulnerabilities_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: releases_vulnerabilities_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE releases_vulnerabilities_id_seq OWNED BY releases_vulnerabilities.id;
+
+
+--
 -- Name: reports; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -3511,6 +3672,28 @@ CREATE TABLE repositories (
     created_at timestamp without time zone DEFAULT timezone('UTC'::text, now()) NOT NULL,
     updated_at timestamp without time zone DEFAULT timezone('UTC'::text, now()) NOT NULL,
     update_interval integer DEFAULT 3600,
+    name_at_forge text,
+    owner_at_forge text
+);
+
+
+--
+-- Name: repositories_bk; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE repositories_bk (
+    id integer,
+    url text,
+    module_name text,
+    branch_name text,
+    best_code_set_id integer,
+    forge_id integer,
+    username text,
+    password text,
+    type text,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone,
+    update_interval integer,
     name_at_forge text,
     owner_at_forge text
 );
@@ -3703,7 +3886,7 @@ CREATE TABLE rss_subscriptions (
 --
 
 CREATE TABLE schema_migrations (
-    version character varying(255) NOT NULL
+    version character varying NOT NULL
 );
 
 
@@ -4259,6 +4442,40 @@ ALTER SEQUENCE vitae_id_seq OWNED BY vitae.id;
 
 
 --
+-- Name: vulnerabilities; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE vulnerabilities (
+    id integer NOT NULL,
+    cve_id character varying NOT NULL,
+    published_on timestamp without time zone,
+    generated_on timestamp without time zone,
+    severity integer,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: vulnerabilities_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE vulnerabilities_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: vulnerabilities_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE vulnerabilities_id_seq OWNED BY vulnerabilities.id;
+
+
+--
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -4605,6 +4822,13 @@ ALTER TABLE ONLY project_reports ALTER COLUMN id SET DEFAULT nextval('project_re
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
+ALTER TABLE ONLY project_security_sets ALTER COLUMN id SET DEFAULT nextval('project_security_sets_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY project_vulnerability_reports ALTER COLUMN id SET DEFAULT nextval('project_vulnerability_reports_id_seq'::regclass);
 
 
@@ -4627,6 +4851,20 @@ ALTER TABLE ONLY recommend_entries ALTER COLUMN id SET DEFAULT nextval('recommen
 --
 
 ALTER TABLE ONLY recommendations ALTER COLUMN id SET DEFAULT nextval('recommendations_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY releases ALTER COLUMN id SET DEFAULT nextval('releases_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY releases_vulnerabilities ALTER COLUMN id SET DEFAULT nextval('releases_vulnerabilities_id_seq'::regclass);
 
 
 --
@@ -4690,6 +4928,13 @@ ALTER TABLE ONLY vita_analyses ALTER COLUMN id SET DEFAULT nextval('vita_analyse
 --
 
 ALTER TABLE ONLY vitae ALTER COLUMN id SET DEFAULT nextval('vitae_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY vulnerabilities ALTER COLUMN id SET DEFAULT nextval('vulnerabilities_id_seq'::regclass);
 
 
 --
@@ -4845,6 +5090,33 @@ ALTER TABLE ONLY clumps
 
 
 --
+<<<<<<< Updated upstream
+=======
+-- Name: code_location_events_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY code_location_events
+    ADD CONSTRAINT code_location_events_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: code_locations_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY code_locations
+    ADD CONSTRAINT code_locations_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: code_locations_unique_repository_id_module_branch_name; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY code_locations
+    ADD CONSTRAINT code_locations_unique_repository_id_module_branch_name UNIQUE (repository_id, module_branch_name);
+
+
+--
+>>>>>>> Stashed changes
 -- Name: code_set_gestalts_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -5413,6 +5685,14 @@ ALTER TABLE ONLY project_reports
 
 
 --
+-- Name: project_security_sets_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY project_security_sets
+    ADD CONSTRAINT project_security_sets_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: project_vulnerability_reports_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -5474,6 +5754,22 @@ ALTER TABLE ONLY recommend_entries
 
 ALTER TABLE ONLY recommendations
     ADD CONSTRAINT recommendations_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: releases_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY releases
+    ADD CONSTRAINT releases_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: releases_vulnerabilities_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY releases_vulnerabilities
+    ADD CONSTRAINT releases_vulnerabilities_pkey PRIMARY KEY (id);
 
 
 --
@@ -5781,6 +6077,14 @@ ALTER TABLE ONLY vitae
 
 
 --
+-- Name: vulnerabilities_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY vulnerabilities
+    ADD CONSTRAINT vulnerabilities_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: edits_organization_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -5991,6 +6295,13 @@ CREATE INDEX index_code_sets_on_best_sloc_set_id ON code_sets USING btree (best_
 
 
 --
+-- Name: index_code_sets_on_code_location_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_code_sets_on_code_location_id ON code_sets USING btree (code_location_id);
+
+
+--
 -- Name: index_code_sets_on_logged_at; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -6103,6 +6414,13 @@ CREATE INDEX index_edits_on_edits ON edits USING btree (target_type, target_id, 
 
 
 --
+-- Name: index_enlistments_on_code_location_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_enlistments_on_code_location_id ON enlistments USING btree (code_location_id);
+
+
+--
 -- Name: index_enlistments_on_project_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -6113,7 +6431,7 @@ CREATE INDEX index_enlistments_on_project_id ON enlistments USING btree (project
 -- Name: index_enlistments_on_repository_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
-CREATE INDEX index_enlistments_on_repository_id ON enlistments USING btree (repository_id) WHERE (deleted IS FALSE);
+CREATE INDEX index_enlistments_on_repository_id ON enlistments USING btree (repository_id);
 
 
 --
@@ -6194,6 +6512,13 @@ CREATE INDEX index_jobs_on_account_id ON jobs USING btree (account_id);
 
 
 --
+-- Name: index_jobs_on_code_location_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_jobs_on_code_location_id ON jobs USING btree (code_location_id);
+
+
+--
 -- Name: index_jobs_on_code_set_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -6205,6 +6530,13 @@ CREATE INDEX index_jobs_on_code_set_id ON jobs USING btree (code_set_id);
 --
 
 CREATE INDEX index_jobs_on_project_id ON jobs USING btree (project_id);
+
+
+--
+-- Name: index_jobs_on_repository_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_jobs_on_repository_id ON jobs USING btree (repository_id);
 
 
 --
@@ -6660,6 +6992,13 @@ CREATE INDEX index_ratings_on_project_id ON ratings USING btree (project_id);
 --
 
 CREATE INDEX index_recommend_entries_on_project_id ON recommend_entries USING btree (project_id);
+
+
+--
+-- Name: index_releases_on_project_security_set_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_releases_on_project_security_set_id ON releases USING btree (project_security_set_id);
 
 
 --
@@ -7140,6 +7479,14 @@ ALTER TABLE ONLY clumps
 
 
 --
+-- Name: code_locations_best_code_set_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY code_locations
+    ADD CONSTRAINT code_locations_best_code_set_id_fkey FOREIGN KEY (best_code_set_id) REFERENCES code_sets(id);
+
+
+--
 -- Name: code_set_gestalts_code_set_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -7409,6 +7756,14 @@ ALTER TABLE ONLY project_vulnerability_reports
 
 ALTER TABLE ONLY api_keys
     ADD CONSTRAINT fk_rails_8faa63554c FOREIGN KEY (oauth_application_id) REFERENCES oauth_applications(id);
+
+
+--
+-- Name: fk_rails_b99b125bd9; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY jobs
+    ADD CONSTRAINT fk_rails_b99b125bd9 FOREIGN KEY (repository_id) REFERENCES repositories(id);
 
 
 --
@@ -8417,6 +8772,19 @@ INSERT INTO schema_migrations (version) VALUES ('20160608090419');
 
 INSERT INTO schema_migrations (version) VALUES ('20160608194402');
 
+<<<<<<< Updated upstream
+=======
+INSERT INTO schema_migrations (version) VALUES ('20160610142302');
+
+INSERT INTO schema_migrations (version) VALUES ('20160802211224');
+
+INSERT INTO schema_migrations (version) VALUES ('20160802211415');
+
+INSERT INTO schema_migrations (version) VALUES ('20160802212012');
+
+INSERT INTO schema_migrations (version) VALUES ('20160804173206');
+
+>>>>>>> Stashed changes
 INSERT INTO schema_migrations (version) VALUES ('21');
 
 INSERT INTO schema_migrations (version) VALUES ('22');
