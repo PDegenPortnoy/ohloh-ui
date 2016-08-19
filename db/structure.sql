@@ -904,6 +904,7 @@ CREATE TABLE projects (
     organization_id integer,
     activity_level_index integer,
     uuid character varying,
+    best_project_security_set_id integer,
     CONSTRAINT valid_missing_source CHECK ((((missing_source IS NULL) OR (missing_source = 'not available'::text)) OR (missing_source = 'not supported'::text)))
 );
 
@@ -2066,7 +2067,8 @@ CREATE TABLE jobs (
     retry_count integer DEFAULT 0,
     do_not_retry boolean DEFAULT false,
     failure_group_id integer,
-    organization_id integer
+    organization_id integer,
+    project_security_set_id integer
 );
 
 
@@ -3350,6 +3352,39 @@ ALTER SEQUENCE project_reports_id_seq OWNED BY project_reports.id;
 
 
 --
+-- Name: project_security_sets; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE project_security_sets (
+    id integer NOT NULL,
+    project_id integer,
+    uuid character varying NOT NULL,
+    etag character varying,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
+);
+
+
+--
+-- Name: project_security_sets_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE project_security_sets_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: project_security_sets_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE project_security_sets_id_seq OWNED BY project_security_sets.id;
+
+
+--
 -- Name: project_vulnerability_reports; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -3518,6 +3553,50 @@ CREATE SEQUENCE recommendations_id_seq
 --
 
 ALTER SEQUENCE recommendations_id_seq OWNED BY recommendations.id;
+
+
+--
+-- Name: releases; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE releases (
+    id integer NOT NULL,
+    release_id character varying NOT NULL,
+    released_on timestamp without time zone,
+    version character varying,
+    project_security_set_id integer,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
+);
+
+
+--
+-- Name: releases_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE releases_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: releases_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE releases_id_seq OWNED BY releases.id;
+
+
+--
+-- Name: releases_vulnerabilities; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE releases_vulnerabilities (
+    release_id integer NOT NULL,
+    vulnerability_id integer NOT NULL
+);
 
 
 --
@@ -4328,6 +4407,41 @@ ALTER SEQUENCE vitae_id_seq OWNED BY vitae.id;
 
 
 --
+-- Name: vulnerabilities; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE vulnerabilities (
+    id integer NOT NULL,
+    cve_id character varying NOT NULL,
+    generated_on timestamp without time zone,
+    published_on timestamp without time zone,
+    severity integer,
+    score numeric,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
+);
+
+
+--
+-- Name: vulnerabilities_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE vulnerabilities_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: vulnerabilities_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE vulnerabilities_id_seq OWNED BY vulnerabilities.id;
+
+
+--
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -4688,6 +4802,13 @@ ALTER TABLE ONLY project_reports ALTER COLUMN id SET DEFAULT nextval('project_re
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
+ALTER TABLE ONLY project_security_sets ALTER COLUMN id SET DEFAULT nextval('project_security_sets_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY project_vulnerability_reports ALTER COLUMN id SET DEFAULT nextval('project_vulnerability_reports_id_seq'::regclass);
 
 
@@ -4710,6 +4831,13 @@ ALTER TABLE ONLY recommend_entries ALTER COLUMN id SET DEFAULT nextval('recommen
 --
 
 ALTER TABLE ONLY recommendations ALTER COLUMN id SET DEFAULT nextval('recommendations_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY releases ALTER COLUMN id SET DEFAULT nextval('releases_id_seq'::regclass);
 
 
 --
@@ -4773,6 +4901,13 @@ ALTER TABLE ONLY vita_analyses ALTER COLUMN id SET DEFAULT nextval('vita_analyse
 --
 
 ALTER TABLE ONLY vitae ALTER COLUMN id SET DEFAULT nextval('vitae_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY vulnerabilities ALTER COLUMN id SET DEFAULT nextval('vulnerabilities_id_seq'::regclass);
 
 
 --
@@ -5512,6 +5647,14 @@ ALTER TABLE ONLY project_reports
 
 
 --
+-- Name: project_security_sets_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY project_security_sets
+    ADD CONSTRAINT project_security_sets_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: project_vulnerability_reports_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -5573,6 +5716,14 @@ ALTER TABLE ONLY recommend_entries
 
 ALTER TABLE ONLY recommendations
     ADD CONSTRAINT recommendations_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: releases_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY releases
+    ADD CONSTRAINT releases_pkey PRIMARY KEY (id);
 
 
 --
@@ -5877,6 +6028,14 @@ ALTER TABLE ONLY vita_analyses
 
 ALTER TABLE ONLY vitae
     ADD CONSTRAINT vitae_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: vulnerabilities_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY vulnerabilities
+    ADD CONSTRAINT vulnerabilities_pkey PRIMARY KEY (id);
 
 
 --
@@ -6720,6 +6879,13 @@ CREATE INDEX index_project_reports_on_report_id ON project_reports USING btree (
 
 
 --
+-- Name: index_project_security_sets_on_project_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_project_security_sets_on_project_id ON project_security_sets USING btree (project_id);
+
+
+--
 -- Name: index_project_vulnerability_reports_on_project_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -6787,6 +6953,34 @@ CREATE INDEX index_ratings_on_project_id ON ratings USING btree (project_id);
 --
 
 CREATE INDEX index_recommend_entries_on_project_id ON recommend_entries USING btree (project_id);
+
+
+--
+-- Name: index_releases_on_project_security_set_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_releases_on_project_security_set_id ON releases USING btree (project_security_set_id);
+
+
+--
+-- Name: index_releases_on_release_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_releases_on_release_id ON releases USING btree (release_id);
+
+
+--
+-- Name: index_releases_vulnerabilities_on_release_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_releases_vulnerabilities_on_release_id ON releases_vulnerabilities USING btree (release_id);
+
+
+--
+-- Name: index_releases_vulnerabilities_on_vulnerability_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_releases_vulnerabilities_on_vulnerability_id ON releases_vulnerabilities USING btree (vulnerability_id);
 
 
 --
@@ -6962,6 +7156,13 @@ CREATE INDEX index_vita_analyses_on_vita_id ON vita_analyses USING btree (vita_i
 --
 
 CREATE INDEX index_vitae_on_account_id ON vitae USING btree (account_id);
+
+
+--
+-- Name: index_vulnerabilities_on_cve_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_vulnerabilities_on_cve_id ON vulnerabilities USING btree (cve_id);
 
 
 --
@@ -7547,6 +7748,14 @@ ALTER TABLE ONLY code_locations
 
 
 --
+-- Name: fk_rails_4bdcc57500; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY releases
+    ADD CONSTRAINT fk_rails_4bdcc57500 FOREIGN KEY (project_security_set_id) REFERENCES project_security_sets(id);
+
+
+--
 -- Name: fk_rails_5a0f61d9a6; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -7555,11 +7764,35 @@ ALTER TABLE ONLY code_location_events
 
 
 --
+-- Name: fk_rails_80ab8d7137; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY jobs
+    ADD CONSTRAINT fk_rails_80ab8d7137 FOREIGN KEY (project_security_set_id) REFERENCES project_security_sets(id);
+
+
+--
 -- Name: fk_rails_8faa63554c; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY api_keys
     ADD CONSTRAINT fk_rails_8faa63554c FOREIGN KEY (oauth_application_id) REFERENCES oauth_applications(id);
+
+
+--
+-- Name: fk_rails_c67f665226; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY projects
+    ADD CONSTRAINT fk_rails_c67f665226 FOREIGN KEY (best_project_security_set_id) REFERENCES project_security_sets(id);
+
+
+--
+-- Name: fk_rails_efaa9c9657; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY project_security_sets
+    ADD CONSTRAINT fk_rails_efaa9c9657 FOREIGN KEY (project_id) REFERENCES projects(id);
 
 
 --
@@ -8571,6 +8804,8 @@ INSERT INTO schema_migrations (version) VALUES ('20160608090419');
 INSERT INTO schema_migrations (version) VALUES ('20160608194402');
 
 INSERT INTO schema_migrations (version) VALUES ('20160610142302');
+
+INSERT INTO schema_migrations (version) VALUES ('20160818102530');
 
 INSERT INTO schema_migrations (version) VALUES ('21');
 
