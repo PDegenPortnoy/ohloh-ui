@@ -252,6 +252,16 @@ fieldset
   word-wrap: break-word
   word-break: break-all
   white-space: normal
+
+.right_border
+  margin-top: 5rem
+  margin-bottom: 5rem
+  min-height: 62rem
+  border-right: 1px solid #ccc
+
+.analysis_blank_container
+  margin-top: 15px
+
 .container#project_container
   .navbar
     margin-bottom: 1.5rem
@@ -260,17 +270,106 @@ fieldset
     .logo_link
       img
         margin-top: 1.6rem
+  .no_padding_right
+    padding-right: 0
+  .no_padding_left
+    padding-left: 0
+  .padding_some
+    padding: 0 2rem !important
+  .margin_top_bottom_5
+    margin: 5rem 0
+  .highcharts-container
+    width: 100% !important
+  .project_row
+    .col-md-4
+      padding: 0 5rem
+    .well.community_well
+      margin-top: 10px
+    .language_table
+      width: 30rem
+      .language_stat_box
+        width: 15rem
+        .language_color_indicator
+          width: 12rem
+        .language_percentage_indicator
+          width: 2rem
+
   @media screen and (max-width: 1279)
     width: 980px !important
   @media screen and (min-width: 1280px) and (max-width:1365px)
     width: 1250px
+    .project_row
+      padding: 0 2rem 2rem 2rem
+      .col-md-4
+        padding: 0 1rem
+      .resize_well
+        padding: 0
+      .padding_some
+        padding: 0 !important
+      .well.community_well, .well.activity_well
+        margin-bottom: 0
+      .language_table
+        width: 29rem
+        .language_stat_box
+          width: 14rem
+          .language_color_indicator
+            width: 12rem
+          .language_percentage_indicator
+            width: 2rem
   @media screen and (min-width: 1366px) and (max-width:1919px)
     width: 1346px
     #project_masthead
       .project_title
         margin-left: -2rem
+    .project_row
+      padding: 0 5rem 2rem 5rem
+      .resize_well
+        padding: 0 1.5rem
+      .col-md-4
+        padding: 0 1.5rem
+      .well.community_well, .well.activity_well
+        margin-bottom: 0
+      .language_pie_image
+        width: 6rem
+        img
+          width: 100%
+      .language_table
+        width: 27rem
+        .language_stat_box
+          width: 13rem
+
   @media screen and (min-width: 1920px)
     width: 1890px
     #project_masthead
       .project_title
         margin-left: -4rem
+    .project_row
+      padding: 0 10rem 0rem 10rem
+      .resize_well
+        padding: 0
+      .padding_some
+        padding: 0 !important
+      .well.community_well, .well.activity_well
+        padding-right: 4rem
+        padding-left: 4rem
+        margin-bottom: 0
+      .language_table
+        width: 37rem
+        .language_stat_box
+          width: 18rem
+          .language_color_indicator
+            width: 14rem
+          .language_percentage_indicator
+            width: 3rem
+  @media screen and (min-width: 992px) and  (max-width: 1279px)
+    .project_row
+      .col-md-4
+        padding: 0 1rem
+      .language_table
+        width: 24rem
+        .language_stat_box
+          width: 12rem
+          .language_color_indicator
+            width: 14rem
+          .language_percentage_indicator
+            width: 3rem
