@@ -1,7 +1,7 @@
 :ruby
   languages_image_options = { project_id: @project.to_param, id: 'latest', height: 75, width: 75 }
 
-.col-md-12.padding_some
+.col-md-12.manage_padding
   - if @analysis
     - if @analysis.empty?
       = t('.no_source')
@@ -15,7 +15,7 @@
           - percent = attr[:percent] > 0 ? attr[:percent] : '<1'
           %tr.pull-left.language_stat_box
             - color = attr[:color]
-            %td.language_color_indicator
+            %td.language_legends
               .pull-left{ style: "width:5px;height:12px;margin-top:5px;margin-right:10px;background-color:##{color}" }
               = id ? link_to(name, language_path(id), itemprop: 'name') : name
             %td.language_percentage_indicator

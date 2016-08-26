@@ -12,11 +12,11 @@
     = render partial: 'projects/show/languages'
   .col-md-4.right_border
     %h2.center= t('.activity')
-    .col-md-12.padding_some
+    .col-md-12.manage_padding
       - if @analysis.present?
         - chart_url = commits_history_project_analysis_url(project_id: @project.to_param, id: 'latest')
         %h4= link_to t('.commits_per_month'), summary_project_commits_path(@project)
-        .col-md-12.padding_some{  }
+        .col-md-12.manage_padding{  }
           .chart.watermark440{ 'datasrc' => chart_url, style: 'width: 100%; min-height: 210px' }
       - else
         %h4= t('.commits_per_month')
@@ -52,7 +52,7 @@
                 = render partial: 'projects/show/twelve_month_summary'
   .col-md-4.margin_top_bottom_5
     %h2.center= t('.community')
-    .col-md-12.padding_some
+    .col-md-12.manage_padding
       %div{ style: 'width: 100%;' }= render partial: 'projects/show/committers_per_month_chart'
       .clearfix
     .clearfix
@@ -62,9 +62,9 @@
           .col-xs-12
             = render partial: 'projects/show/community_recent_committers'
         .row.proj_community_ratings#proj_rating= render partial: 'projects/show/community_rating', locals: { score: @score }
-    .row.padding_some
+    .row.manage_padding
       .col-md-12 &nbsp;
-    .row.padding_some
+    .row.manage_padding
       .col-md-6#stackoverflow_recent_questions
       .col-md-6#stackoverflow_popular_questions
   / .mezzo
