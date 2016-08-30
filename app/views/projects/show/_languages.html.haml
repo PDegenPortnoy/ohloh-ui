@@ -1,7 +1,7 @@
 :ruby
   languages_image_options = { project_id: @project.to_param, id: 'latest', height: 75, width: 75 }
 
-.col-md-12.manage_padding
+.col-md-12.manage_padding.language_table_container
   - if @analysis
     - if @analysis.empty?
       = t('.no_source')
