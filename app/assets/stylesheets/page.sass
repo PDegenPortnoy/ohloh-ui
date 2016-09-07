@@ -8,7 +8,6 @@ body
   color: #000
 
 #page
-  width: 980px
   background-color: white
   margin: 0 auto
   padding: 10px 10px 0 10px
@@ -268,7 +267,7 @@ fieldset
 .analysis_blank_container
   margin-top: 15px
 
-.container#project_container
+.container-fluid#project_container
   .navbar
     margin-bottom: 1.5rem
     #top_nav_actions
@@ -288,14 +287,15 @@ fieldset
   .highcharts-container
     width: 100% !important
   .project_row
-    .col-md-4
-      padding: 0 5rem
+    .overflow_scroll
+      overflow-y: scroll
+      max-height: 250px
     .resize_well
       height: 100%
     .community_well, .activity_well
       height: 100%
     .bottom_section
-      margin-bottom: 4rem
+      margin-bottom: 1.5rem
       &.languages_container
         display: flex
         justify-content: center
@@ -319,13 +319,9 @@ fieldset
         margin-bottom: 0
 
   @media screen and (max-width: 1279)
-    width: 980px !important
   @media screen and (min-width: 1280px) and (max-width:1365px)
-    width: 1250px
     .project_row
       padding: 0 2rem 0rem 2rem
-      .col-md-4
-        padding: 0 1rem
       .resize_well
         padding: 0
       .manage_padding
@@ -341,24 +337,23 @@ fieldset
               width: 12rem
             .language_percentage_indicator
               width: 2rem
+      .bottom_section
+        margin-bottom: 1.5rem
       .quick_reference_container
         .well
           .col-xs-4
             padding-left: 0
 
   @media screen and (min-width: 1366px) and (max-width:1919px)
-    width: 1346px
     #project_masthead
       .project_title
         margin-left: -2rem
     .project_row
-      padding: 0 5rem 2rem 5rem
+      padding: 0 5rem 0rem 5rem
       .resize_well
         padding: 0 1.5rem
         .col-md-4
         padding: 0 1.5rem
-      .col-md-4
-        padding: 0 1rem
       .community_well, .activity_well
         margin-bottom: 0
       .language_pie_image
@@ -370,9 +365,10 @@ fieldset
           width: 27rem
           .language_stat_box
             width: 13rem
+      .bottom_section
+        margin-bottom: 1.5rem
 
   @media screen and (min-width: 1920px)
-    width: 1890px
     #project_masthead
       .project_title
         margin-left: -4rem
@@ -397,8 +393,6 @@ fieldset
               width: 3rem
   @media screen and (min-width: 992px) and  (max-width: 1279px)
     .project_row
-      .col-md-4
-        padding: 0 1rem
       .language_table_container
         .language_table
           width: 24rem
