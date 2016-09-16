@@ -4,7 +4,13 @@
   page_context[:select_footer_nav] = :project_security
 
 %div
-  %h2.pull-left= t('.title')
   = project_analysis_timestamp(@project)
 
 .clear
+.row
+  .col-md-1
+    &nbsp;
+  .col-md-10
+    %h3= t('.title')
+  .col-md-1
+    &nbsp;
