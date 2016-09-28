@@ -352,6 +352,8 @@ en:
       date_published: 'Date Published'
       description: 'Description'
       versions_affected: 'Versions Affected'
+      more: 'more...'
+      less: 'less...'
     vulnerabilities:
       severity:
         low: 'Low Severity'
