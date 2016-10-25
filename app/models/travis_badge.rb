@@ -1,8 +1,7 @@
 class TravisBadge < ProjectBadge
-  API_BASE_URL = 'https://api.travis-ci.org'.freeze
 
-  def badge_image
-    "#{API_BASE_URL}/#{identifier}"
+  def badge_url
+    "#{ENV['TRAVIS_API_BASE_URL']}#{identifier}"
   end
 
   def self.badge_name
