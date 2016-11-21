@@ -57,6 +57,7 @@ group :development do
   gem 'guard-livereload', '~> 2.5', '>= 2.5.2', require: false
   gem 'meta_request'
   gem 'quiet_assets'
+  gem 'pry-rails'
 end
 
 group :test do
