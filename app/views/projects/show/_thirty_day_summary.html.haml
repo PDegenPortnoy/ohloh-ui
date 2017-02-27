@@ -3,7 +3,8 @@
     - thirty_day_summary = @analysis.thirty_day_summary
     - thirty_days_ago = @analysis.oldest_code_set_time - 30.days
     - new_contributors_count = thirty_day_summary.new_contributors_count || 0
-    - new_languages = Language.new_languages_for_project(@project, thirty_days_ago)
+    -#- new_languages = Language.new_languages_for_project(@project, thirty_days_ago)
+    - new_languages = []
 
     %li
       %big= thirty_day_summary.commits_count

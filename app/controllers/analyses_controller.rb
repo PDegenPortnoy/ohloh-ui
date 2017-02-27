@@ -32,7 +32,8 @@ class AnalysesController < ApplicationController
   end
 
   def commits_history
-    commits_history = Analysis::CommitHistoryChart.new(@analysis).data
+    #commits_history = Analysis::CommitHistoryChart.new(@analysis).data
+    commits_history = {}
     render json: commits_history
   end
 
@@ -62,10 +63,11 @@ class AnalysesController < ApplicationController
   end
 
   def commits_spark
-    spark_image = Rails.cache.fetch("analysis/#{@analysis.id}/commits_spark", expires_in: 4.hours) do
-      monthly_commits = Analysis::MonthlyCommits.new(analysis: @analysis).execute
-      Spark::SimpleSpark.new(monthly_commits, max_value: 5000).render.to_blob
-    end
+    #spark_image = Rails.cache.fetch("analysis/#{@analysis.id}/commits_spark", expires_in: 4.hours) do
+      #monthly_commits = Analysis::MonthlyCommits.new(analysis: @analysis).execute
+      #Spark::SimpleSpark.new(monthly_commits, max_value: 5000).render.to_blob
+    #end
+    spark_image = nil
     send_data spark_image, type: 'image/png', filename: 'commits.png', disposition: 'inline'
   end
 

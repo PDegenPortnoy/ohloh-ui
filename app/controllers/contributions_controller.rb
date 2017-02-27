@@ -34,10 +34,10 @@ class ContributionsController < ApplicationController
   end
 
   def commits_spark
-    spark_image = Rails.cache.fetch("contributor/#{@contributor.id}/commits_spark", expires_in: 4.hours) do
-      Spark::SimpleSpark.new(@contributor.monthly_commits, max_value: 50).render.to_blob
-    end
-    send_data spark_image, type: 'image/png', filename: 'commits.png', disposition: 'inline'
+    #spark_image = Rails.cache.fetch("contributor/#{@contributor.id}/commits_spark", expires_in: 4.hours) do
+      #Spark::SimpleSpark.new(@contributor.monthly_commits, max_value: 50).render.to_blob
+    #end
+    send_data nil, type: 'image/png', filename: 'commits.png', disposition: 'inline'
   end
 
   def commits_compound_spark
