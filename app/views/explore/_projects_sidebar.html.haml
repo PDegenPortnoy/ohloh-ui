@@ -1,5 +1,6 @@
 .well.col-md-3.margin_left_10.margin_top_20#explore_sidebar
-  = link_to t('.add_new_project'), new_project_path, class: 'btn btn-primary btn-mini add_new_project_btn_top'
+  / Commenting out to disable new project creation functionality
+  / = link_to t('.add_new_project'), new_project_path, class: 'btn btn-primary btn-mini add_new_project_btn_top'
   %div
     %h3= t('.search')
     .margin_left_10
@@ -34,11 +35,11 @@
       autocomplete: 'off', data: { source: '/autocompletes/project', select: 'submitFormWithId' } }
       .icon-search.search.submit
       %span.error.hidden= t('.invalid_select')
-
     %p &nbsp;
-    %h3= t('.add')
-    %p.justify.margin_left_10.margin_top_20{ style: 'line-height: 20px' }
-      = t('.community')
-      = t('.dont_see_a_project')
-    .text-center.add_new_project_btn_bottom
-      = link_to t('.add_new_project'), new_project_path, class: 'btn btn-primary btn-small'
+    / Commenting out to disable new project creation functionality
+    / %h3= t('.add')
+    / %p.justify.margin_left_10.margin_top_20{ style: 'line-height: 20px' }
+    /   = t('.community')
+    /   = t('.dont_see_a_project')
+    / .text-center.add_new_project_btn_bottom
+    /   = link_to t('.add_new_project'), new_project_path, class: 'btn btn-primary btn-small'

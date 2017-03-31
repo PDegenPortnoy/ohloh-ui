@@ -60,8 +60,8 @@ module ProjectFilters
   end
 
   def set_uuid
-    return if @project.uuid.present?
-    uuid = OpenhubSecurity.get_uuid(@project.name)
-    @project.update_column('uuid', uuid) if uuid
+    # return if @project.uuid.present?
+    # uuid = OpenhubSecurity.get_uuid(@project.name)
+    # @project.update_column('uuid', uuid) if uuid
   end
 end

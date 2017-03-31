@@ -14,7 +14,7 @@ module AccountScopes
     scope :recently_active, lambda {
       where(level: Account::Access::DEFAULT)
         .joins(vitas: :vita_fact)
-        .where(VitaFact.arel_table[:last_checkin].gt(1.month.ago))
+        .where(VitaFact.arel_table[:last_checkin].gt(12.month.ago))
         .where(arel_table[:best_vita_id].eq(Vita.arel_table[:id]))
         .where.not(best_vita_id: nil)
         .order('COALESCE(name_facts.thirty_day_commits, 0) DESC').limit(10)

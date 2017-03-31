@@ -14,35 +14,35 @@
         %i.icon-twitter
         %p.follow! #{t(:follow)}&nbsp;@
         %img.icon_twitter{ src: image_path('header/twitter.png') }
-    - if logged_in?
-      %li
-        .dropdown#logged_user_menu
-          %a{ 'data-toggle' => 'dropdown', :href => '#', :class => 'dropdown-toggle navbar-text link_no_underline' }
-            %i.icon-user
-            = h(current_user.name)
-            %i.icon-caret-down
-          %ul.dropdown-menu.user-menu.pull-right.dropdown-menu.dropdown-yellow.dropdown-caret.dropdown-closer
-            %li
-              %a{ href: account_path(current_user).to_s }
-                %i.icon-user
-                = t :profile
-            %li
-              %a{ href: settings_account_path(current_user).to_s }
-                %i.icon-cog
-                  = t :settings
-            - if current_user_is_admin?
-              %li
-                %a{ href: admin_root_path }
-                  %i.icon-tachometer
-                    = t :admin_dashboard
-            %li.divider
-            %li
-              = link_to("<i class='icon-off'></i> #{t(:logout)}".html_safe, sessions_path, method: :delete)
-    - else
-      %li
-        %a.icon-signin.btn.btn-mini.btn-primary{ href: new_session_path }= t :sign_in
-      %li
-        %a.icon-plus-sign.btn.btn-mini.btn-success{ href: new_registration_path }= t :join_now
+    / - if logged_in?
+    /   %li
+    /     .dropdown#logged_user_menu
+    /       %a{ 'data-toggle' => 'dropdown', :href => '#', :class => 'dropdown-toggle navbar-text link_no_underline' }
+    /         %i.icon-user
+    /         = h(current_user.name)
+    /         %i.icon-caret-down
+    /       %ul.dropdown-menu.user-menu.pull-right.dropdown-menu.dropdown-yellow.dropdown-caret.dropdown-closer
+    /         %li
+    /           %a{ href: account_path(current_user).to_s }
+    /             %i.icon-user
+    /             = t :profile
+    /         %li
+    /           %a{ href: settings_account_path(current_user).to_s }
+    /             %i.icon-cog
+    /               = t :settings
+    /         - if current_user_is_admin?
+    /           %li
+    /             %a{ href: admin_root_path }
+    /               %i.icon-tachometer
+    /                 = t :admin_dashboard
+    /         %li.divider
+    /         %li
+    /           = link_to("<i class='icon-off'></i> #{t(:logout)}".html_safe, sessions_path, method: :delete)
+    / - else
+    /   %li
+    /     %a.icon-signin.btn.btn-mini.btn-primary{ href: new_session_path }= t :sign_in
+    /   %li
+    /     %a.icon-plus-sign.btn.btn-mini.btn-success{ href: new_registration_path }= t :join_now
 
 - if read_only_mode?
   %div

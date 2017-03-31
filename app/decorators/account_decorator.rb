@@ -83,7 +83,7 @@ class AccountDecorator < Cherry::Decorator
   end
 
   def append_setting_menu(menus)
-    menus.first.insert(1, [:settings, I18n.t(:settings), h.settings_account_path(account)])
+    #menus.first.insert(1, [:settings, I18n.t(:settings), h.settings_account_path(account)])
   end
 
   def append_unclaimed_contribution_menu(menus, current_user)
